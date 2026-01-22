@@ -22,6 +22,7 @@ class Enemy {
     if (this.x + this.width < 0) this.markedForDeletion = true;
   }
   draw(context){
+    if(this.game.debug) context.strokeRect(this.x, this.y, this.width, this.height);
     context.drawImage(this.image, this.frameX * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height)
   }
 }
@@ -46,9 +47,7 @@ class Enemy {
     this.angle += this.va;
     this.y += Math.sin(this.angle);
   }
-  
 }
-
 
  export class GroundEnemy extends Enemy {
   constructor(game) {
@@ -63,7 +62,6 @@ class Enemy {
     this.speedY = 0;
     this.maxFrame = 1;
   }
-
 }
 
  export class ClimbingEnemy extends Enemy {
@@ -88,10 +86,9 @@ class Enemy {
 
     draw(context){
       super.draw(context);
-      context.begingPath();
+      context.beginPath();
       context.moveTo(this.x + this.width/2,0);
       context.lineTo(this.x + this.width/2, this.y + 50);
       context.stroke();
     }
-
 }
