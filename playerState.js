@@ -162,6 +162,8 @@ export class Hit extends State{
       this.game.player.setState(states.RUNNING, 1);
     } else if(this.game.frame >= 10 && !this.game.player.onGround()){
       this.game.player.setState(states.FALLING, 1);
+    } else if ((input.includes('ArrowLeft') || input.includes('ArrowRight'))  && this.game.player.onGround()){
+      this.game.player.setState(states.RUNNING, 1);
     }
   }
 }
