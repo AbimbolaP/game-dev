@@ -1,4 +1,4 @@
-import { Sitting, Running , Jumping, Falling, Rolling } from "./playerState.js";
+import { Sitting, Running , Jumping, Falling, Rolling, Diving, Hit } from "./playerState.js";
 
 
 export class Player {
@@ -19,9 +19,8 @@ export class Player {
     this.frameTimer = 0;
     this.speed = 0;
     this.maxSpeed = 10;
-    this.states= [new Sitting(this), new Running(this), new Jumping(this), new Falling(this), new Rolling(this)];
-    this.currentState = this.states[0];
-    this.currentState.enter();
+    this.states= [new Sitting(this.game), new Running(this.game), new Jumping(this.game), new Falling(this.game), new Rolling(this.game), new Diving(this.game), new Hit(this.game)];
+
 
   }
   update(input, deltaTime){
@@ -33,6 +32,7 @@ export class Player {
     else if(input.includes('ArrowLeft')) this.speed = -this.maxSpeed;
     else this.speed = 0;
 
+    //horizontal boundaries
     if(this.x < 0) this.x = 0;
     if(this.x > this.game.width - this.width) this.x = this.game.width - this.width;
 
@@ -40,6 +40,9 @@ export class Player {
     this.y += this.vy;
     if(!this.onGround()) this.vy += this.weight;
     else this.vy = 0;
+
+    //vertical boundaries
+    if(this.y > this.game.height - this.height - this.game.groundMargin) this.y = this.game.height - this.height - this.game.groundMargin;
 
     //sprite animation
     if (this.frameTimer > this.frameInterval){
@@ -72,9 +75,12 @@ export class Player {
         enemy.y + enemy.height > this.y
       ){
         enemy.markedForDeletion =  true;
-        this.game.score++;
-      }else {
-        //no collision
+
+        if(this.currentState === this.states[4] || this.currentState === this.states[5]) {
+          this.game.score++;
+        } else {
+          this.setState(6, 0)
+        }
       }
     })
   }
